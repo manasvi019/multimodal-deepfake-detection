@@ -1,0 +1,14 @@
+
+# Python virtual environment
+.venv/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Uploaded videos and generated analysis outputs
+uploads/
+analysis_outputs/
+
+# Environment variables and secrets
+.env
