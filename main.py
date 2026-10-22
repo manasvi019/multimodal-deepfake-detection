@@ -1,5 +1,10 @@
 
-from fastapi import FastAPI
+from fastapi import FastAPI, File, HTTPException, UploadFile
+
+from services.upload_service import (
+    UploadValidationError,
+    save_video,
+)
 
 app = FastAPI(
     title="Multi-Modal Deepfake Detection API",
@@ -11,3 +16,22 @@ app = FastAPI(
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
+
+
+@app.post("/upload", status_code=201)
+async def upload_video(file: UploadFile = File(...)):
+    try:
+        result = await save_video(file)
+        return result
+
+    except UploadValidationError as exc:
+        raise HTTPException(
+            status_code=400,
+            detail=str(exc),
+        ) from exc
+
+    except OSError:
+        raise HTTPException(
+            status_code=500,
+            detail="Could not store the uploaded video.",
+        ) from None
