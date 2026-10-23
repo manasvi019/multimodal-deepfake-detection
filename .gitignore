@@ -1,0 +1,26 @@
+
+# Python virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Generated test outputs
+extracted_audio/
+extracted_frames/
+
+# Local test videos and datasets
+test_videos/
+datasets/
+
+# Model weights
+*.pth
+*.pt
+*.ckpt
+
+# IDE settings
+.vscode/
+
+# Generated visualization
+face_detection_result.jpg
