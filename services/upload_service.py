@@ -99,3 +99,19 @@ async def save_video(upload: UploadFile) -> dict:
         raise
     finally:
         await upload.close()
+def list_uploaded_videos() -> list[dict]:
+    """Return metadata for videos stored in the uploads directory."""
+    if not UPLOAD_DIR.exists():
+        return []
+
+    videos = []
+
+    for path in UPLOAD_DIR.iterdir():
+        if path.is_file() and path.suffix.lower() in ALLOWED_EXTENSIONS:
+            stat = path.stat()
+            videos.append({
+                "filename": path.name,
+                "size_bytes": stat.st_size,
+            })
+
+    return sorted(videos, key=lambda video: video["filename"])

@@ -4,6 +4,7 @@ from fastapi import FastAPI, File, HTTPException, UploadFile
 from services.upload_service import (
     UploadValidationError,
     save_video,
+    list_uploaded_videos,
 )
 
 app = FastAPI(
@@ -35,3 +36,11 @@ async def upload_video(file: UploadFile = File(...)):
             status_code=500,
             detail="Could not store the uploaded video.",
         ) from None
+@app.get("/videos")
+def get_uploaded_videos():
+    videos = list_uploaded_videos()
+
+    return {
+        "count": len(videos),
+        "videos": videos,
+    }

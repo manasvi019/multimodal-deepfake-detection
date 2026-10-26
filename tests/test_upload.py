@@ -104,3 +104,46 @@ def test_reject_mp4_with_invalid_content(temporary_upload_dir):
     assert response.status_code == 400
     assert "content" in response.json()["detail"].lower()
     assert list(temporary_upload_dir.iterdir()) == []
+
+def test_list_uploaded_videos(temporary_upload_dir):
+    video_file = temporary_upload_dir / "sample.mp4"
+    video_file.write_bytes(b"sample video content")
+
+    response = client.get("/videos")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["count"] == 1
+    assert data["videos"] == [
+        {
+            "filename": "sample.mp4",
+            "size_bytes": len(b"sample video content"),
+        }
+    ]
+
+
+def test_list_uploaded_videos_empty(temporary_upload_dir):
+    response = client.get("/videos")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "count": 0,
+        "videos": [],
+    }
+
+
+def test_list_uploaded_videos_missing_directory(
+    temporary_upload_dir,
+    monkeypatch,
+):
+    # Point the service to a directory that does not exist.
+    missing_dir = temporary_upload_dir / "missing"
+    monkeypatch.setattr(upload_service, "UPLOAD_DIR", missing_dir)
+
+    response = client.get("/videos")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "count": 0,
+        "videos": [],
+    }
