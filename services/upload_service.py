@@ -18,6 +18,28 @@ class UploadValidationError(Exception):
     """Raised when an uploaded video fails validation."""
 
 
+def has_supported_video_signature(header: bytes, extension: str) -> bool:
+    """Check common container signatures; this does not fully decode a video."""
+    if extension == ".mp4":
+        # ISO Base Media File Format commonly uses an ftyp box near the start.
+        return len(header) >= 8 and header[4:8] == b"ftyp"
+
+    if extension == ".mov":
+        # MOV commonly uses the same ISO Base Media File Format container.
+        return len(header) >= 8 and header[4:8] == b"ftyp"
+
+    if extension == ".avi":
+        # AVI files start with RIFF and identify the AVI form at byte 8.
+        return (
+            len(header) >= 12
+            and header[:4] == b"RIFF"
+            and header[8:12] == b"AVI "
+        )
+
+    return False
+
+
+
 async def save_video(upload: UploadFile) -> dict:
     """Validate and store an uploaded video using a server-generated name."""
     original_name = Path(upload.filename or "").name
@@ -59,7 +81,13 @@ async def save_video(upload: UploadFile) -> dict:
 
         if total_size == 0:
             raise UploadValidationError("Uploaded file is empty.")
+        with destination.open("rb") as saved_file:
+            header = saved_file.read(32)
 
+        if not has_supported_video_signature(header, extension):
+            raise UploadValidationError(
+                "File content does not match a supported video format."
+                )
         return {
             "filename": destination.name,
             "size_bytes": total_size,

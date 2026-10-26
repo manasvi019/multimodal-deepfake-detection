@@ -27,7 +27,7 @@ def test_upload_valid_mp4(temporary_upload_dir):
         files={
             "file": (
                 "sample.mp4",
-                b"sample video content",
+                b"\x00\x00\x00\x18ftypmp42" + b"\x00" * 32,
                 "video/mp4",
             )
         },
@@ -36,7 +36,7 @@ def test_upload_valid_mp4(temporary_upload_dir):
     assert response.status_code == 201
     data = response.json()
     assert data["message"] == "Video uploaded successfully."
-    assert data["size_bytes"] == len(b"sample video content")
+    assert data["size_bytes"] == len(b"\x00\x00\x00\x18ftypmp42" + b"\x00" * 32)
     assert data["filename"].endswith(".mp4")
     assert (temporary_upload_dir / data["filename"]).exists()
 
@@ -87,4 +87,20 @@ def test_reject_oversized_file(temporary_upload_dir, monkeypatch):
 
     assert response.status_code == 400
     assert "exceeds" in response.json()["detail"]
+    assert list(temporary_upload_dir.iterdir()) == []
+
+def test_reject_mp4_with_invalid_content(temporary_upload_dir):
+    response = client.post(
+        "/upload",
+        files={
+            "file": (
+                "fake.mp4",
+                b"this is not a video",
+                "video/mp4",
+            )
+        },
+    )
+
+    assert response.status_code == 400
+    assert "content" in response.json()["detail"].lower()
     assert list(temporary_upload_dir.iterdir()) == []
