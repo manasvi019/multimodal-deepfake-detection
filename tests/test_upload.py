@@ -147,3 +147,34 @@ def test_list_uploaded_videos_missing_directory(
         "count": 0,
         "videos": [],
     }
+
+def test_get_video_details(temporary_upload_dir):
+    video_content = b"sample video content"
+    video_file = temporary_upload_dir / "sample.mp4"
+    video_file.write_bytes(video_content)
+
+    response = client.get("/videos/sample.mp4")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "filename": "sample.mp4",
+        "size_bytes": len(video_content),
+    }
+
+
+def test_get_video_details_not_found(temporary_upload_dir):
+    response = client.get("/videos/unknown.mp4")
+
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Video not found."
+
+
+def test_get_video_details_reject_invalid_path(temporary_upload_dir):
+    response = client.get("/videos/..%2Fsecret.mp4")
+
+    assert response.status_code == 404
+    assert response.json()["detail"] in {
+        "Video not found.",
+        "Not Found",
+    }
+

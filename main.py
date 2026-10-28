@@ -1,10 +1,10 @@
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
-
 from services.upload_service import (
     UploadValidationError,
     save_video,
     list_uploaded_videos,
+    get_video_details,
 )
 
 app = FastAPI(
@@ -44,3 +44,15 @@ def get_uploaded_videos():
         "count": len(videos),
         "videos": videos,
     }
+
+@app.get("/videos/{filename}")
+def get_video(filename: str):
+    result = get_video_details(filename)
+
+    if result is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Video not found.",
+        )
+
+    return result

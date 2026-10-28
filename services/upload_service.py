@@ -115,3 +115,21 @@ def list_uploaded_videos() -> list[dict]:
             })
 
     return sorted(videos, key=lambda video: video["filename"])
+
+def get_video_details(filename: str) -> dict | None:
+    """Return metadata for one uploaded video."""
+    if not filename or Path(filename).name != filename:
+        return None
+
+    path = UPLOAD_DIR / filename
+
+    if path.suffix.lower() not in ALLOWED_EXTENSIONS:
+        return None
+
+    if not path.is_file():
+        return None
+
+    return {
+        "filename": path.name,
+        "size_bytes": path.stat().st_size,
+    }
