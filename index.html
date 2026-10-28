@@ -1,0 +1,172 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080d16">
+
+    <title>Deepfake Detection System</title>
+
+    <link rel="stylesheet" href="./style.css">
+    <script src="./app.js" defer></script>
+</head>
+
+<body>
+    <header class="site-header">
+        <span class="eyebrow">MULTI-MODAL MEDIA FORENSICS</span>
+        <h1>Deepfake Detection System</h1>
+        <p>Multi-Modal Deepfake &amp; Synthetic Media Detection</p>
+    </header>
+
+    <main class="page-container">
+
+        <!-- VIDEO UPLOAD SECTION -->
+        <section class="upload-card" id="uploadSection">
+
+            <span class="eyebrow">MEDIA FORENSICS / 01</span>
+            <h2>Analyze Your Video</h2>
+
+            <p class="upload-description">
+                Upload a prerecorded video to inspect potential visual,
+                audio and synchronization inconsistencies.
+            </p>
+
+            <div class="drop-zone" id="dropZone"
+                 role="button" tabindex="0"
+                 aria-label="Choose or drop a video">
+
+                <div class="upload-icon" aria-hidden="true">Γåæ</div>
+
+                <h3>Drop your video here</h3>
+                <p>or select a file from your device</p>
+
+                <input
+                    type="file"
+                    id="videoFile"
+                    accept="video/*"
+                    aria-label="Select a video file"
+                >
+
+                <label for="videoFile" class="browse-button">
+                    Browse files
+                </label>
+
+                <p class="format-note">
+                    Prerecorded video files only
+                </p>
+            </div>
+
+            <!-- SELECTED FILE DETAILS -->
+            <div class="file-details" id="fileDetails" hidden>
+                <div class="file-heading">
+                    <div>
+                        <span class="eyebrow">SELECTED MEDIA</span>
+                        <p id="fileName" class="file-name"></p>
+                        <p id="fileInfo" class="file-info"></p>
+                    </div>
+
+                    <button type="button" id="removeVideo"
+                            class="remove-button">
+                        Remove
+                    </button>
+                </div>
+
+                <div class="video-preview-container">
+                    <video
+                        id="videoPreview"
+                        class="video-preview"
+                        controls
+                        playsinline
+                        preload="metadata"
+                    ></video>
+                </div>
+            </div>
+
+            <p class="file-message" id="fileMessage" role="status"
+               aria-live="polite">
+                No video selected yet.
+            </p>
+
+            <button type="button" id="analyzeButton"
+                    class="analyze-button" disabled>
+                Analyze Video <span aria-hidden="true">ΓåÆ</span>
+            </button>
+
+            <p class="notice" id="analysisNotice" role="status"
+               aria-live="polite">
+                Frontend prototype ΓÇö analysis is not connected yet.
+            </p>
+        </section>
+
+        <!-- ANALYSIS OVERVIEW -->
+        <section class="results-card" id="resultsSection" hidden>
+
+            <span class="eyebrow">MEDIA FORENSICS / 02</span>
+            <h2>Analysis Overview</h2>
+
+            <p class="results-description">
+                Review the analysis categories below. Actual detection
+                results will appear when the backend is connected.
+            </p>
+
+            <div class="results-grid">
+
+                <article class="result-item">
+                    <span class="result-number">01</span>
+                    <h3>Visual Analysis</h3>
+                    <p>
+                        Examines video frames for potential facial
+                        artifacts, visual inconsistencies and manipulation.
+                    </p>
+                    <span class="result-status">Awaiting model</span>
+                </article>
+
+                <article class="result-item">
+                    <span class="result-number">02</span>
+                    <h3>Audio Analysis</h3>
+                    <p>
+                        Designed to examine speech and audio features
+                        for potential synthetic-media indicators.
+                    </p>
+                    <span class="result-status">Awaiting model</span>
+                </article>
+
+                <article class="result-item">
+                    <span class="result-number">03</span>
+                    <h3>Audio-Video Sync</h3>
+                    <p>
+                        Designed to inspect possible inconsistencies
+                        between spoken audio and visible lip movements.
+                    </p>
+                    <span class="result-status">Awaiting model</span>
+                </article>
+
+                <article class="result-item final-result">
+                    <span class="result-number">04</span>
+                    <h3>Final Detection Result</h3>
+                    <p>
+                        A combined assessment will be displayed when
+                        the multimodal detection pipeline is integrated.
+                    </p>
+                    <div class="final-result-status">
+                        No prediction available
+                    </div>
+                    <p class="result-disclaimer">
+                        No authenticity verdict has been generated.
+                    </p>
+                </article>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <p>Final Year Major Project | B.Tech AIML</p>
+        <p>Multi-Modal Deepfake &amp; Synthetic Media Detection</p>
+    </footer>
+</body>
+</html>
