@@ -178,3 +178,24 @@ def test_get_video_details_reject_invalid_path(temporary_upload_dir):
         "Not Found",
     }
 
+def test_get_video_information_unreadable_file(temporary_upload_dir):
+    video_file = temporary_upload_dir / "sample.mp4"
+    video_file.write_bytes(b"not a real video")
+
+    response = client.get("/videos/sample.mp4/info")
+
+    assert response.status_code == 400
+    assert "Could not read video information" in response.json()["detail"]
+
+
+def test_get_video_information_missing_file(temporary_upload_dir):
+    response = client.get("/videos/missing.mp4/info")
+
+    assert response.status_code == 400
+    assert "Could not read video information" in response.json()["detail"]
+
+
+def test_get_video_information_invalid_path(temporary_upload_dir):
+    response = client.get("/videos/..%2Fsecret.mp4/info")
+
+    assert response.status_code == 404

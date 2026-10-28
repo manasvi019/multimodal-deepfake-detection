@@ -1,4 +1,4 @@
-
+from services.video_service import get_video_info
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from services.upload_service import (
     UploadValidationError,
@@ -56,3 +56,18 @@ def get_video(filename: str):
         )
 
     return result
+
+@app.get("/videos/{filename}/info")
+def get_video_information(filename: str):
+    result = get_video_info(filename)
+
+    if result is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Could not read video information. Check that the video exists and is readable.",
+        )
+
+    return {
+        "filename": filename,
+        "video_info": result,
+    }
