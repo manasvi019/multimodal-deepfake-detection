@@ -1,0 +1,531 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeepShield | Dashboard</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Inter, "Segoe UI", sans-serif;
+      background: #090d18;
+      color: #eef2ff;
+      min-height: 100vh;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 245px;
+      background: #0d1221;
+      border-right: 1px solid #20283a;
+      padding: 28px 18px;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      font-size: 21px;
+      font-weight: 750;
+      letter-spacing: -0.6px;
+      margin: 4px 10px 42px;
+    }
+
+    .brand span {
+      color: #8b7bff;
+    }
+
+    .nav-label {
+      color: #79849c;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin: 0 12px 14px;
+    }
+
+    .nav-link {
+      display: block;
+      padding: 13px 14px;
+      margin-bottom: 7px;
+      border-radius: 10px;
+      color: #aab4ca;
+      text-decoration: none;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: #1b2040;
+      color: #fff;
+    }
+
+    .nav-link.active {
+      box-shadow: inset 3px 0 #8b7bff;
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      padding: 15px 12px 0;
+      border-top: 1px solid #20283a;
+      color: #8e9ab1;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    main {
+      flex: 1;
+      min-width: 0;
+      padding: 36px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .eyebrow {
+      color: #9a8cff;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: clamp(26px, 3vw, 36px);
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #8e9ab1;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .primary-btn {
+      background: #8170ff;
+      color: white;
+      border: 0;
+      border-radius: 10px;
+      padding: 13px 18px;
+      font-weight: 650;
+      font-size: 13px;
+      text-decoration: none;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: 0.2s;
+    }
+
+    .primary-btn:hover {
+      background: #6c5ae8;
+      transform: translateY(-1px);
+    }
+
+    .section-heading {
+      font-size: 17px;
+      margin-bottom: 18px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 34px;
+    }
+
+    .card {
+      background: #111827;
+      border: 1px solid #222d42;
+      border-radius: 15px;
+      padding: 23px;
+      min-width: 0;
+    }
+
+    .stat-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .stat-label {
+      color: #9aa6bc;
+      font-size: 13px;
+    }
+
+    .stat-icon {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: #222044;
+      color: #a99cff;
+      font-size: 19px;
+    }
+
+    .stat-value {
+      font-size: 31px;
+      font-weight: 750;
+      letter-spacing: -1px;
+      margin-bottom: 9px;
+    }
+
+    .stat-note {
+      color: #8491a9;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(250px, 0.8fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .panel-heading h2 {
+      font-size: 16px;
+    }
+
+    .muted {
+      color: #8491a9;
+      font-size: 12px;
+    }
+
+    .activity {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 16px 0;
+      border-bottom: 1px solid #222d42;
+    }
+
+    .activity:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .activity-icon {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      background: #1c2440;
+      border-radius: 11px;
+      flex-shrink: 0;
+    }
+
+    .activity-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .activity-title {
+      font-size: 13px;
+      font-weight: 600;
+      overflow-wrap: anywhere;
+      margin-bottom: 5px;
+    }
+
+    .activity-subtitle {
+      color: #8794ab;
+      font-size: 11px;
+    }
+
+    .status {
+      border-radius: 20px;
+      padding: 6px 9px;
+      background: #25223f;
+      color: #b5aaff;
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .modality {
+      padding: 16px 0;
+      border-bottom: 1px solid #222d42;
+    }
+
+    .modality:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .modality-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .modality-row span:last-child {
+      color: #9b8dff;
+      font-size: 11px;
+    }
+
+    .track {
+      height: 5px;
+      background: #273047;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .fill {
+      width: 0;
+      height: 100%;
+      background: #8b7bff;
+      border-radius: inherit;
+    }
+
+    .notice {
+      margin-top: 20px;
+      padding: 14px;
+      border-radius: 10px;
+      background: #191b30;
+      color: #9ca9c1;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    footer {
+      margin-top: 28px;
+      color: #69768d;
+      font-size: 11px;
+    }
+
+    @media (max-width: 1050px) {
+      main {
+        padding: 25px;
+      }
+
+      .sidebar {
+        width: 205px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .layout {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+        padding: 18px;
+      }
+
+      .brand {
+        margin: 0 0 18px;
+      }
+
+      .nav-label,
+      .sidebar-bottom {
+        display: none;
+      }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .nav-link {
+        padding: 10px;
+        margin: 0;
+        font-size: 12px;
+      }
+
+      main {
+        padding: 22px 16px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+        margin-bottom: 26px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 19px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">Deep<span>Shield</span></div>
+
+      <div class="nav-label">Workspace</div>
+      <nav>
+        <a class="nav-link active" href="dashboard.html">◫ &nbsp; Dashboard</a>
+        <a class="nav-link" href="index.html">＋ &nbsp; New Analysis</a>
+        <a class="nav-link" href="#history">◷ &nbsp; Analysis History</a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <strong>Multimodal AI</strong><br>
+        Deepfake Detection Studio<br>
+        <span>Frontend Preview</span>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <div class="eyebrow">Workspace / Overview</div>
+          <h1>Detection Dashboard</h1>
+          <p class="subtitle">Monitor your video analysis workspace in one place.</p>
+        </div>
+
+        <a class="primary-btn" href="index.html">＋ &nbsp; Analyze a Video</a>
+      </header>
+
+      <section aria-labelledby="overview-title">
+        <h2 class="section-heading" id="overview-title">Overview</h2>
+
+        <div class="stats">
+          <article class="card">
+            <div class="stat-top">
+              <span class="stat-label">Videos Analyzed</span>
+              <span class="stat-icon">▤</span>
+            </div>
+            <div class="stat-value">—</div>
+            <p class="stat-note">Your completed analyses will appear here.</p>
+          </article>
+
+          <article class="card">
+            <div class="stat-top">
+              <span class="stat-label">Pending Analyses</span>
+              <span class="stat-icon">◷</span>
+            </div>
+            <div class="stat-value">—</div>
+            <p class="stat-note">Processing status will be shown here.</p>
+          </article>
+
+          <article class="card">
+            <div class="stat-top">
+              <span class="stat-label">Detection Records</span>
+              <span class="stat-icon">⌕</span>
+            </div>
+            <div class="stat-value">—</div>
+            <p class="stat-note">Records will appear after backend integration.</p>
+          </article>
+        </div>
+      </section>
+
+      <div class="content-grid">
+        <section class="card" id="history">
+          <div class="panel-heading">
+            <h2>Recent Analysis</h2>
+            <span class="muted">Latest activity</span>
+          </div>
+
+          <div class="activity">
+            <div class="activity-icon">▣</div>
+            <div class="activity-info">
+              <div class="activity-title">Video analysis workspace</div>
+              <div class="activity-subtitle">Upload a video to begin</div>
+            </div>
+            <span class="status">Ready</span>
+          </div>
+
+          <div class="activity">
+            <div class="activity-icon">◉</div>
+            <div class="activity-info">
+              <div class="activity-title">Visual analysis</div>
+              <div class="activity-subtitle">Face and frame analysis</div>
+            </div>
+            <span class="status">Awaiting API</span>
+          </div>
+
+          <div class="activity">
+            <div class="activity-icon">♫</div>
+            <div class="activity-info">
+              <div class="activity-title">Audio and synchronization</div>
+              <div class="activity-subtitle">Audio analysis and AV sync</div>
+            </div>
+            <span class="status">Awaiting API</span>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="panel-heading">
+            <h2>Analysis Modules</h2>
+          </div>
+
+          <div class="modality">
+            <div class="modality-row">
+              <span>Visual Analysis</span>
+              <span>Planned</span>
+            </div>
+            <div class="track"><div class="fill"></div></div>
+          </div>
+
+          <div class="modality">
+            <div class="modality-row">
+              <span>Audio Analysis</span>
+              <span>Planned</span>
+            </div>
+            <div class="track"><div class="fill"></div></div>
+          </div>
+
+          <div class="modality">
+            <div class="modality-row">
+              <span>Audio-Video Sync</span>
+              <span>Planned</span>
+            </div>
+            <div class="track"><div class="fill"></div></div>
+          </div>
+
+          <div class="notice">
+            Detection metrics and module status will be populated after the backend is connected.
+          </div>
+        </section>
+      </div>
+
+      <footer>
+        DeepShield · Multimodal Deepfake &amp; Synthetic Media Detection
+      </footer>
+    </main>
+  </div>
+</body>
+</html>
